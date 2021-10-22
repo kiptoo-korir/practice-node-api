@@ -1,5 +1,9 @@
-const { check } = require("express-validator");
-const { validationHandler } = require("../../utils/validation");
+const { check, param } = require("express-validator");
+const {
+  validationHandler,
+  notFoundHandler,
+} = require("../../utils/validation");
+const { getById } = require("./eventsDAL");
 
 function eventValidationRules() {
   let yesterdayDate = new Date();
@@ -36,6 +40,51 @@ function eventValidationRules() {
   ];
 }
 
+function deleteValidationRules() {
+  return [
+    check("eventId")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please ensure that you have selected an event to remove.")
+      .custom(async (eventId) => {
+        try {
+          const event = await getById(eventId);
+
+          if (!event) {
+            throw new Error("Event not found.");
+          }
+        } catch (error) {
+          throw error;
+        }
+      }),
+  ];
+}
+
+function getEventRules() {
+  return [
+    // check("id")
+    param("id")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please ensure that you have selected an event.")
+      .custom((eventId) => {
+        return getById(eventId)
+          .then((event) => {
+            if (event.length === 0) {
+              return Promise.reject("Event not found.");
+            }
+          })
+          .catch((error) => {
+            throw error;
+          });
+      }),
+  ];
+}
+
 module.exports = {
   validate: [eventValidationRules(), validationHandler],
+  validateDelete: [deleteValidationRules(), notFoundHandler],
+  validateGetEvent: [getEventRules(), notFoundHandler],
 };

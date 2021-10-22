@@ -9,6 +9,16 @@ function validationHandler(request, response, next) {
   return response.status(422).json({ errors: errors.array() });
 }
 
+function notFoundHandler(request, response, next) {
+  const errors = validationResult(request);
+  if (errors.isEmpty()) {
+    next();
+  }
+
+  return response.status(404).json({ errors: errors.array() });
+}
+
 module.exports = {
   validationHandler,
+  notFoundHandler,
 };

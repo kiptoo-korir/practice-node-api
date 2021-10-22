@@ -1,9 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { getEvent, getEvents, createEvent } = require("./eventsController");
-const { validate } = require("./eventsValidator");
 
-router.get("/:id", async (request, response) => {
+const {
+  getEvent,
+  getEvents,
+  createEvent,
+  deleteEvent,
+} = require("./eventsController");
+
+const {
+  validate,
+  validateDelete,
+  validateGetEvent,
+} = require("./eventsValidator");
+
+router.get("/:id", validateGetEvent, async (request, response) => {
   const { params } = request;
   const { id } = params;
 
@@ -29,6 +40,19 @@ router.post("/", validate, async (request, response) => {
 
   const newEvent = await createEvent(eventObject);
   response.status(200).json({ event: newEvent });
+});
+
+router.delete("/", validateDelete, async (request, response) => {
+  const { body } = request;
+  const { eventId } = body;
+
+  const state = await deleteEvent(eventId);
+
+  if (state) {
+    response
+      .status(200)
+      .json({ message: "Event has been removed successfully" });
+  }
 });
 
 module.exports = {

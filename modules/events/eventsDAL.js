@@ -7,8 +7,6 @@ async function getById(id) {
     return event;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -19,8 +17,6 @@ async function getAll() {
     return events;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -32,8 +28,6 @@ async function create(event) {
     return newEvent;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -44,8 +38,6 @@ async function remove(eventId) {
     return true;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 

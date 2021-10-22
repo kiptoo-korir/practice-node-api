@@ -6,8 +6,6 @@ async function getEvent(id) {
     return event;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -17,8 +15,6 @@ async function getEvents() {
     return events;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -30,8 +26,6 @@ async function createEvent(event) {
     return newEvent;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 
@@ -41,8 +35,6 @@ async function deleteEvent(id) {
     return state;
   } catch (error) {
     throw error;
-  } finally {
-    return null;
   }
 }
 

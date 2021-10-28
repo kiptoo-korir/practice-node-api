@@ -23,7 +23,7 @@ async function getAll() {
 async function create(event) {
   try {
     const query =
-      "INSERT INTO events(event_name, event_date, event_time, location, remarks) VALUES $1, $2, $3, $4, $5 RETURNING *";
+      "INSERT INTO events(event_name, event_date, event_time, location, remarks) VALUES ($1, $2, $3, $4, $5) RETURNING *";
     const { rows: newEvent } = await db.query(query, event);
     return newEvent;
   } catch (error) {

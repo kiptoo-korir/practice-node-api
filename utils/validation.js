@@ -12,7 +12,7 @@ function validationHandler(request, response, next) {
 function notFoundHandler(request, response, next) {
   const errors = validationResult(request);
   if (errors.isEmpty()) {
-    next();
+    return next();
   }
 
   return response.status(404).json({ errors: errors.array() });

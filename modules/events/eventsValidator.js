@@ -30,12 +30,6 @@ function eventValidationRules() {
       .escape()
       .notEmpty()
       .withMessage("Please indicate the time the event is supposed to start."),
-    check("location")
-      .trim()
-      .escape()
-      .notEmpty()
-      .withMessage("Please indicate the time the event is supposed to start.")
-      .isString(),
     check("location").trim().escape().isString(),
   ];
 }
@@ -51,8 +45,8 @@ function deleteValidationRules() {
         try {
           const event = await getById(eventId);
 
-          if (!event) {
-            throw new Error("Event not found.");
+          if (event.length === 0) {
+            return Promise.reject("Event not found.");
           }
         } catch (error) {
           throw error;
@@ -63,7 +57,6 @@ function deleteValidationRules() {
 
 function getEventRules() {
   return [
-    // check("id")
     param("id")
       .trim()
       .escape()
@@ -83,8 +76,34 @@ function getEventRules() {
   ];
 }
 
+function eventIdRuleUpdate() {
+  return [
+    check("eventId")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please ensure that the event id is provided.")
+      .custom((eventId) => {
+        return getById(eventId)
+          .then((event) => {
+            if (event.length === 0) {
+              return Promise.reject("Event not found.");
+            }
+          })
+          .catch((error) => {
+            throw error;
+          });
+      }),
+  ];
+}
+
 module.exports = {
   validate: [eventValidationRules(), validationHandler],
   validateDelete: [deleteValidationRules(), notFoundHandler],
   validateGetEvent: [getEventRules(), notFoundHandler],
+  validateUpdateEvent: [
+    eventIdRuleUpdate(),
+    eventValidationRules(),
+    validationHandler,
+  ],
 };

@@ -1,4 +1,4 @@
-const { getById, getAll, create, remove } = require("./eventsDAL");
+const { getById, getAll, create, remove, update } = require("./eventsDAL");
 
 async function getEvent(id) {
   try {
@@ -31,8 +31,19 @@ async function createEvent(event) {
 
 async function deleteEvent(id) {
   try {
-    const state = remove(id);
+    const state = await remove(id);
     return state;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateEvent(event, eventId) {
+  try {
+    const eventArray = Object.values(event);
+    const updatedEvent = update(eventArray, eventId);
+
+    return updatedEvent;
   } catch (error) {
     throw error;
   }
@@ -43,4 +54,5 @@ module.exports = {
   getEvents,
   createEvent,
   deleteEvent,
+  updateEvent,
 };

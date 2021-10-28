@@ -6,25 +6,37 @@ const {
   getEvents,
   createEvent,
   deleteEvent,
+  updateEvent,
 } = require("./eventsController");
 
 const {
   validate,
   validateDelete,
   validateGetEvent,
+  validateUpdateEvent,
 } = require("./eventsValidator");
 
 router.get("/:id", validateGetEvent, async (request, response) => {
   const { params } = request;
   const { id } = params;
 
-  const event = await getEvent(id);
-  response.json({ event });
+  getEvent(id)
+    .then((event) => {
+      response.json({ event });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 router.get("/", async (request, response) => {
-  const events = await getEvents();
-  response.json({ events });
+  getEvents()
+    .then((events) => {
+      response.json({ events });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 router.post("/", validate, async (request, response) => {
@@ -38,20 +50,46 @@ router.post("/", validate, async (request, response) => {
     remarks,
   };
 
-  const newEvent = await createEvent(eventObject);
-  response.status(200).json({ event: newEvent });
+  createEvent(eventObject)
+    .then((newEvent) => {
+      response.status(200).json({ event: newEvent });
+    })
+    .catch((error) => console.error(error));
+});
+
+router.put("/", validateUpdateEvent, async (request, response) => {
+  const { body } = request;
+  const { eventId, eventName, eventDate, eventTime, location, remarks } = body;
+  const eventObject = {
+    eventName,
+    eventDate,
+    eventTime,
+    location,
+    remarks,
+  };
+
+  try {
+    const updatedEvent = await updateEvent(eventObject, eventId);
+    response.status(200).json({ event: updatedEvent });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.delete("/", validateDelete, async (request, response) => {
   const { body } = request;
   const { eventId } = body;
 
-  const state = await deleteEvent(eventId);
+  try {
+    const state = await deleteEvent(eventId);
 
-  if (state) {
-    response
-      .status(200)
-      .json({ message: "Event has been removed successfully" });
+    if (state === "removed") {
+      response
+        .status(200)
+        .json({ message: "Event has been removed successfully" });
+    }
+  } catch (error) {
+    console.log(error);
   }
 });
 

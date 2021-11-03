@@ -21,7 +21,6 @@ async function getEvents() {
 async function createEvent(event) {
   try {
     const eventArray = Object.values(event);
-    console.log(eventArray, event);
     const newEvent = await create(eventArray);
     return newEvent;
   } catch (error) {

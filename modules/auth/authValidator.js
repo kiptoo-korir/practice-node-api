@@ -6,6 +6,7 @@ const {
   validationHandler,
   notFoundHandler,
 } = require("../../utils/validation");
+const { request } = require("express");
 
 function registerValidationRules() {
   return [
@@ -40,5 +41,21 @@ function registerValidationRules() {
       .notEmpty()
       .withMessage("Please input your password.")
       .isStrongPassword(),
+    check("confirmPassword")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please ensure that the password is confirmed.")
+      .custom((confirmPassword) => {
+        try {
+          if (confirmPassword !== request.body.password) {
+            return Promise.reject(
+              "Please ensure that the two passwords match."
+            );
+          }
+        } catch (error) {
+          throw error;
+        }
+      }),
   ];
 }

@@ -10,6 +10,18 @@ async function getByEmail(email) {
   }
 }
 
+async function createUser(user) {
+  try {
+    const query =
+      "INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
+    const { rows: user } = await db.query(query, user);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getByEmail,
+  createUser,
 };

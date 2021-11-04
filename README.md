@@ -17,6 +17,10 @@ In the development environment, nodemon is used to run the server, using the com
 
 **`npm run dev`**
 
+## Upcoming changes
+
+Will be including at least a postman collection in the repository for ease of playing around with the api and if time allows proper api documentation
+
 ## Invitation to comment
 
 Feel free to pitch in with contributions and or corrections on the code, Thanks.

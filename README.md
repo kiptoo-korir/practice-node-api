@@ -7,7 +7,7 @@ Very simple api in node js/express, developed solely for the purpose of practise
 1. Clone the project `git clone git@github.com:kiptoo-korir/practice-node-api.git`
 2. Install the dependencies through `npm i`
 3. Create your database in postgres
-4. Run the query found in the sql file located in the db/migrations directory
+4. Run the queries found in the sql files located in the db/migrations directory
 5. Create a .env file from the .env.example in the root directory
 6. Setup your .env file by filling in your database credentials among other details
 

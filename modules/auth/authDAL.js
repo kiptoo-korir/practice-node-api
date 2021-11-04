@@ -12,10 +12,15 @@ async function getByEmail(email) {
 
 async function createUser(user) {
   try {
+    const timeNow = new Date();
     const query =
-      "INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
-    const { rows: user } = await db.query(query, user);
-    return user;
+      "INSERT INTO users (name, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5) RETURNING *";
+    const { rows: newUser } = await db.query(query, [
+      ...user,
+      timeNow,
+      timeNow,
+    ]);
+    return newUser;
   } catch (error) {
     throw error;
   }

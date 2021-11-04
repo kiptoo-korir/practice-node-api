@@ -8,6 +8,7 @@ const {
 } = require("../../utils/validation");
 const { request } = require("express");
 
+// "There's no such email on record, please sign up to get an account."
 function registerValidationRules() {
   return [
     check("name")
@@ -26,9 +27,9 @@ function registerValidationRules() {
         try {
           const user = await getByEmail(email);
 
-          if (user.length === 0) {
+          if (user.length !== 0) {
             return Promise.reject(
-              "There's no such email on record, please sign up to get an account."
+              "This email is already registered and linked to a user in the system. Please signup with another email or login to your account if it belongs to you."
             );
           }
         } catch (error) {
@@ -40,22 +41,30 @@ function registerValidationRules() {
       .escape()
       .notEmpty()
       .withMessage("Please input your password.")
-      .isStrongPassword(),
+      .isStrongPassword({
+        minLength: 8,
+        minUppercase: 1,
+        minLowercase: 1,
+        minSymbols: 0,
+      })
+      .withMessage(
+        "Please ensure your password is at least 8 characters long, has at least one uppercase and lowercase letters."
+      ),
     check("confirmPassword")
       .trim()
       .escape()
       .notEmpty()
-      .withMessage("Please ensure that the password is confirmed.")
-      .custom((confirmPassword) => {
-        try {
-          if (confirmPassword !== request.body.password) {
-            return Promise.reject(
-              "Please ensure that the two passwords match."
-            );
-          }
-        } catch (error) {
-          throw error;
-        }
-      }),
+      .withMessage("Please confirm your password.")
+      .custom(
+        (confirmPassword, { req: request }) =>
+          confirmPassword === request.body.password
+      )
+      .withMessage(
+        "Password and the confirmed password fields must have the same password field"
+      ),
   ];
 }
+
+module.exports = {
+  validateRegister: [registerValidationRules(), validationHandler],
+};

@@ -1,11 +1,17 @@
 const { createUser } = require("./authDAL");
+const { generateHash } = require("./authService");
 
 async function register(user) {
   try {
-    const userArray = Object.values(user);
-    const newUser = await createUser(userArray);
-    // Once user is created, create token for user
+    const { name, email, password } = user;
+    const hashedPassword = generateHash(password);
+    const newUser = await createUser([name, email, hashedPassword]);
+    return newUser;
   } catch (error) {
     throw error;
   }
 }
+
+module.exports = {
+  register,
+};

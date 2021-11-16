@@ -26,7 +26,18 @@ async function createUser(user) {
   }
 }
 
+async function getHashedPassword(email) {
+  try {
+    const query = "SELECT password FROM users WHERE email = $1 LIMIT 1";
+    const { rows: user } = db.query(query, [email]);
+    return user.email;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   getByEmail,
   createUser,
+  getHashedPassword,
 };

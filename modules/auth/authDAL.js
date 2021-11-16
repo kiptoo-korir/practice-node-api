@@ -29,8 +29,8 @@ async function createUser(user) {
 async function getHashedPassword(email) {
   try {
     const query = "SELECT password FROM users WHERE email = $1 LIMIT 1";
-    const { rows: user } = db.query(query, [email]);
-    return user.email;
+    const { rows } = await db.query(query, [email]);
+    return rows[0].password;
   } catch (error) {
     throw error;
   }

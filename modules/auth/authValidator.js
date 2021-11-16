@@ -77,9 +77,9 @@ function signInValidationRules() {
         try {
           const user = await getByEmail(email);
 
-          if (user.length !== 0) {
+          if (user.length === 0) {
             return Promise.reject(
-              "This email is already registered and linked to a user in the system. Please signup with another email or login to your account if it belongs to you."
+              "This email is not registered in our database. Please create a new account."
             );
           }
         } catch (error) {

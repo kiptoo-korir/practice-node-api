@@ -10,6 +10,15 @@ function generateHash(password) {
   }
 }
 
+function checkPassword(password, hashedPassword) {
+  try {
+    return bcrypt.compareSync(password, hashedPassword);
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   generateHash,
+  checkPassword,
 };

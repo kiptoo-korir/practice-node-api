@@ -6,7 +6,6 @@ const {
   validationHandler,
   notFoundHandler,
 } = require("../../utils/validation");
-const { request } = require("express");
 
 // "There's no such email on record, please sign up to get an account."
 function registerValidationRules() {
@@ -65,6 +64,37 @@ function registerValidationRules() {
   ];
 }
 
+function signInValidationRules() {
+  return [
+    check("email")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please input your email.")
+      .isEmail()
+      .withMessage("Please input a valid email")
+      .custom(async (email) => {
+        try {
+          const user = await getByEmail(email);
+
+          if (user.length !== 0) {
+            return Promise.reject(
+              "This email is already registered and linked to a user in the system. Please signup with another email or login to your account if it belongs to you."
+            );
+          }
+        } catch (error) {
+          throw error;
+        }
+      }),
+    check("password")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Please input your password."),
+  ];
+}
+
 module.exports = {
   validateRegister: [registerValidationRules(), validationHandler],
+  validateSignIn: [signInValidationRules(), validationHandler],
 };

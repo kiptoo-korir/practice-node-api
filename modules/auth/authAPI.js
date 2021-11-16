@@ -30,8 +30,9 @@ router.post("/login", validateSignIn, async (request, response) => {
     if (token) {
       response
         .status(200)
-        .json({ msg: "Logged in successfully." })
-        .set({ Authorization: `Bearer ${token}` });
+        .json({ msg: "Logged in successfully.", token: token });
+
+      return;
     }
 
     response.status(401).json({

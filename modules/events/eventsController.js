@@ -3,7 +3,7 @@ const { getById, getAll, create, remove, update } = require("./eventsDAL");
 async function getEvent(id) {
   try {
     const event = await getById(id);
-    return event;
+    return event[0];
   } catch (error) {
     throw error;
   }

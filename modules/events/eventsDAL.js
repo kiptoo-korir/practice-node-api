@@ -1,10 +1,29 @@
 const db = require("../../db");
 
-async function getById(id) {
+async function getById(eventId) {
   try {
     const query = "SELECT * FROM events WHERE id = $1";
-    const { rows: event } = await db.query(query, [id]);
-    return event;
+    const { rows: event } = await db.query(query, [eventId]);
+    return event.map((event) => {
+      const {
+        id,
+        event_name: eventName,
+        event_time: eventTime,
+        location,
+        remarks,
+        created_at: createdAt,
+        updated_at: updatedAt,
+      } = event;
+      return {
+        id,
+        eventName,
+        eventTime,
+        location,
+        remarks,
+        createdAt,
+        updatedAt,
+      };
+    });
   } catch (error) {
     throw error;
   }
@@ -14,7 +33,26 @@ async function getAll() {
   try {
     const query = "SELECT * FROM events";
     const { rows: events } = await db.query(query);
-    return events;
+    return events.map((event) => {
+      const {
+        id,
+        event_name: eventName,
+        event_time: eventTime,
+        location,
+        remarks,
+        created_at: createdAt,
+        updated_at: updatedAt,
+      } = event;
+      return {
+        id,
+        eventName,
+        eventTime,
+        location,
+        remarks,
+        createdAt,
+        updatedAt,
+      };
+    });
   } catch (error) {
     throw error;
   }
